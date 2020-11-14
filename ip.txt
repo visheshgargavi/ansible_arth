@@ -1,0 +1,11 @@
+[web1]
+192.168.43.234 ansible_ssh_user=root ansible_ssh_pass=aviforever ansible_connection=ssh
+
+[web2]
+192.168.43.6 ansible_ssh_user=root ansible_ssh_pass=aviforever ansible_connection=ssh
+
+[datanode]
+192.168.43.6 ansible_ssh_user=root ansible_ssh_pass=aviforever ansible_connection=ssh
+
+[namenode]
+192.168.43.158 ansible_ssh_user=root ansible_ssh_pass=aviforever ansible_connection=ssh

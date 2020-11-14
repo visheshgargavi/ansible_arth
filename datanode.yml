@@ -1,0 +1,76 @@
+- name: hadoop-setup using ansible
+  hosts: datanode
+  gather_facts: no
+  vars_prompt:
+  - name: d_dir
+    prompt: "Enter datanode directory name you want to create"
+    private: no
+
+  - name: n_ip
+    prompt: "Enter namenode ip eg 1.2.3.4"
+    private: no
+
+  - name: hadoop_port
+    prompt: "Enter hadoop port"
+    private: no
+
+  tasks:
+  - name: copying hadoop software
+    copy:
+     src: "/root/Desktop/hadoop-1.2.1-1.x86_64.rpm"
+     dest: "/root/soft/"
+
+  - name: copying java software
+    copy:
+     src: "/root/Desktop/jdk-8u171-linux-x64.rpm"
+     dest: "/root/soft"
+
+  - name: installing java packages
+    shell: "rpm -i /root/soft/jdk-8u171-linux-x64.rpm"
+    register: java_installed
+
+  - name: java success code
+    debug:
+     var: java_installed.stdout
+
+  - name: installing hadoop packages
+    shell: "rpm -i /root/soft/hadoop-1.2.1-1.x86_64.rpm --force"
+    register: hadoop_installed
+    when: java_installed.rc == 0
+
+  - name: hadoop success code
+    debug:
+     var: hadoop_installed.stderr_lines
+
+  - name: creating datanode directory
+    file:
+     path: "{{ d_dir }}"
+     state: directory
+
+  - name: copying hdfs-site file
+    template:
+     src: "hdfs-site.xml"
+     dest: "/etc/hadoop/hdfs-site.xml"
+
+  - name: copying core-site file
+    template:
+     src: "core-site.xml"
+     dest: "/etc/hadoop/core-site.xml"
+
+  - name: starting service
+    shell: "hadoop-daemon.sh start datanode"
+
+  - name: success code
+    shell: "jps"
+    register: success
+
+  - debug:
+     var: success.stdout_lines
+
+  - name: dfsadmin report
+    shell: "hadoop dfsadmin -report"
+    register: report
+
+  - name: report
+    debug:
+     var: report.stdout_lines
