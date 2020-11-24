@@ -1,0 +1,38 @@
+- hosts: web2
+  vars:
+  - software: "httpd"
+  - cont: "Welcome to the world of automation"
+  - destination: "/var/www/html/home.html"
+
+  tasks:
+  - package:
+      name: "{{ software }}"
+      state: present
+    register: x
+
+  - name: httpd installed successfully
+    debug:
+      var: x.results
+
+  - copy:
+      content: "{{ cont }}"
+      dest: "{{ destination }}"
+    ignore_errors:  yes
+
+  - service:
+      name: "firewalld"
+      state: stopped
+    register: firewalld
+
+  - name: firewall stopped successfully
+    debug:
+      var: firewalld.state
+
+  - service:
+      name: "{{ software }}"
+      state: started
+    register: httpd
+
+  - name: httpd started successfully
+    debug:
+      var: httpd.state

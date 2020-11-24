@@ -1,0 +1,61 @@
+- name: configuring_yum_using_ansible
+  gather_facts: No
+  become: true
+  become_method: sudo
+  hosts: web2
+  tasks:
+  - name: creating_directory
+    file:
+      path: "/dvd"
+      state: directory
+      mode: "0755"
+    register: dvd
+
+  - name: folder created successfully
+    debug:
+      var: dvd
+
+  - name: mounting_dvd
+    mount:
+      path: /dvd
+      src: /dev/cdrom
+      fstype: iso9660
+      opts: ro,noauto
+      state: mounted
+    register: mount_dvd
+
+  - name: dvd_mounted successfully
+    debug:
+      var: mount_dvd.changed
+
+  - name: yum_repo_BaseOS
+    yum_repository:
+      name: BaseOS
+      description: Local_baseos
+      file: dvd1
+      baseurl: file:///dvd/BaseOS
+      gpgcheck: no
+
+  - name: yum_repo_AppStream
+    yum_repository:
+      name: AppStream
+      description: Local_appstream
+      file: dvd2
+      baseurl: file:///dvd/AppStream
+      gpgcheck: no
+
+  - name: yum_clean_caches
+    shell: "yum clean all"
+    register: clean_all
+
+  - name: clean_caches
+    debug:
+      var: clean_all.stdout_lines
+
+  - name: yum_repository
+    shell: "yum repolist"
+    register: yum_repo
+
+  - name: repo
+    debug:
+      var: yum_repo.stdout_lines
