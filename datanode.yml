@@ -25,9 +25,26 @@
      src: "/root/Desktop/jdk-8u171-linux-x64.rpm"
      dest: "/root/soft"
 
+  - name: checking whether java package is already installed of not
+    shell: "java -version"
+    register: java_ver
+
+  - name: checking whether hadoop package is already installed of not
+    shell: "hadoop -version"
+    register: hadoop_ver
+
+  - name: java -version output
+    debug:
+      var: java_ver
+
+  - name: hadoop -version output
+    debug:
+      var: hadoop_ver
+
   - name: installing java packages
     shell: "rpm -i /root/soft/jdk-8u171-linux-x64.rpm"
     register: java_installed
+    when: java_ver.rc == 1
 
   - name: java success code
     debug:
@@ -36,7 +53,7 @@
   - name: installing hadoop packages
     shell: "rpm -i /root/soft/hadoop-1.2.1-1.x86_64.rpm --force"
     register: hadoop_installed
-    when: java_installed.rc == 0
+    when: hadoop_ver.rc == 1
 
   - name: hadoop success code
     debug:
