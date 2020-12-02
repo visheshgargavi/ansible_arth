@@ -3,3 +3,4 @@
 - configuring apache websever using ansbile
 - configuring yum using ansible
 - installing docker using ansible
+- configuring haproxy software
