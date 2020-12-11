@@ -28,10 +28,12 @@
   - name: checking whether java package is already installed of not
     shell: "java -version"
     register: java_ver
+    ignore_errors: yes
 
   - name: checking whether hadoop package is already installed of not
     shell: "hadoop -version"
     register: hadoop_ver
+    ignore_errors: yes
 
   - name: java -version output
     debug:
@@ -44,7 +46,7 @@
   - name: installing java packages
     shell: "rpm -i /root/soft/jdk-8u171-linux-x64.rpm"
     register: java_installed
-    when: java_ver.rc == 1
+    when: java_ver.rc == 127
 
   - name: java success code
     debug:
@@ -53,7 +55,7 @@
   - name: installing hadoop packages
     shell: "rpm -i /root/soft/hadoop-1.2.1-1.x86_64.rpm --force"
     register: hadoop_installed
-    when: hadoop_ver.rc == 1
+    when: hadoop_ver.rc == 127 and  ( java_ver.rc == 0 or java_installed.rc == 0 )
 
   - name: hadoop success code
     debug:
