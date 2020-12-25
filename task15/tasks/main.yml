@@ -1,0 +1,25 @@
+---
+# tasks file for task15
+
+  - name: installing haproxy software
+    package:
+      name: "haproxy"
+      state: present
+
+  - name: copying haproxy files
+    template:
+      src: "haproxy.cfg.j2"
+      dest: "/etc/haproxy/haproxy.cfg"
+    notify: lbrestart
+
+  - name: stopping firewalld
+    service:
+       name: "firewalld"
+       state: stopped
+  
+  - name: starting haproxy service
+    service:
+      name: "haproxy"
+      state: started
+
+
