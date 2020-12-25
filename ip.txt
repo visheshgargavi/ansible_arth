@@ -1,11 +1,29 @@
+[task9]
+192.168.43.43 ansible_ssh_user=root ansible_ssh_pass=aviforever ansible_connection=ssh ansible_become_pass=aviforever
+
+[docker]
+{{ result.container.NetworkSettings.IPAddress }} ansible_ssh_user=root ansible_ssh_pass=mypasswd ansible_connection=ssh
+
 [web1]
 192.168.43.234 ansible_ssh_user=root ansible_ssh_pass=aviforever ansible_connection=ssh
 
 [web2]
 192.168.43.6 ansible_ssh_user=root ansible_ssh_pass=aviforever ansible_connection=ssh
 
+[lb]
+192.168.43.43 ansible_ssh_user=root ansible_ssh_pass=aviforever ansible_connection=ssh
+
+[web3]
+192.168.43.187 ansible_ssh_user=root ansible_ssh_pass=aviforever ansible_connection=ssh
+192.168.43.158 ansible_ssh_user=root ansible_ssh_pass=aviforever ansible_connection=ssh
+192.168.43.223 ansible_ssh_user=root ansible_ssh_pass=aviforever ansible_connection=ssh
+
 [datanode]
 192.168.43.6 ansible_ssh_user=root ansible_ssh_pass=aviforever ansible_connection=ssh
 
 [namenode]
 192.168.43.158 ansible_ssh_user=root ansible_ssh_pass=aviforever ansible_connection=ssh
+
+[task9]
+192.168.43.43 ansible_ssh_user=root ansible_ssh_pass=aviforever ansible_connection=ssh
+

@@ -1,0 +1,130 @@
+-  name: docker_setup
+   gather_facts: No
+   hosts: 192.168.43.43
+   vars_prompt:
+   - name: os_name
+     prompt: Enter docker container os name
+     private: no
+   tasks:
+   - name: Remove docker if installed from CentOS repo
+     yum:
+       name:
+        - docker
+        - docker-client
+        - docker-client-latest
+        - docker-common
+        - docker-latest
+        - docker-latest-logrotate
+        - docker-logrotate
+        - docker-engine
+       state: removed
+     register: remove
+
+   - name: unwanted softwares removed successfully
+     debug:
+       var: remove.results
+
+   - name: Install yum utils
+     yum:
+       name: yum-utils
+       state: latest
+
+   - name: Install device-mapper-persistent-data
+     yum:
+       name: device-mapper-persistent-data
+       state: latest
+
+   - name: Install lvm2
+     yum:
+       name: lvm2
+       state: latest
+
+   - name: Adding docker repo
+     yum_repository:
+      name: download.docker.com_linux_centos_7_x86_64_stable_
+      description: download.docker.com_linux_centos_7_x86_64_stable_
+      file: download.docker.com_linux_centos_7_x86_64_stable_
+      baseurl: "https://download.docker.com/linux/centos/7/x86_64/stable/"
+      enabled: yes
+
+   - name: Install Docker
+     shell: "yum install --nobest docker-ce -y"
+     register: docker
+
+   - name: docker installed successfully
+     debug:
+       var: docker
+
+   - name: Start Docker service
+     service:
+       name: docker
+       state: started
+       enabled: yes
+     become: yes
+     register: d_service
+
+   - name: docker service started successfully
+     debug:
+       var: d_service
+
+   - name: docker-py
+     shell: "pip3 install docker"
+
+   - name: pull an image
+     docker_image:
+       name: centos:7
+       source: pull
+
+   - name: creating a centos container
+     docker_container:
+        name: "myos"
+        image: centos:latest
+        state: started
+        tty: yes
+        detach: yes
+     register: container
+
+   - name: register container
+     debug: 
+       var: container
+
+
+   - name: Get infos on container
+     docker_container_info:
+       name: myos
+     register: result
+ 
+   - name: retriving IP
+     debug:
+       var: result.container.NetworkSettings.IPAddress
+
+
+   - name: Go Into Docker Container And Run Multiple Commands
+     command: docker exec -it "{{ os_name }}" yum install openssh-server openssh-clients -y
+     register: software
+
+   - name: installing software
+     debug:
+       var: software.stdout
+
+   - name: ssh-keygen
+     command: docker exec -it "{{ os_name }}" /usr/bin/ssh-keygen -A
+     register: keygen
+
+   - name: output of ssh-keygen
+     debug:
+       var: keygen
+
+   - name: starting services
+     command: docker exec -it "{{ os_name }}" /usr/sbin/sshd
+     register: start
+
+   - name: output of starting ssh service
+     debug:
+       var: start
+
+   - name: configuring the ip
+     template:
+       src: "/root/ansible/ip.txt"
+       dest: "/root/ip.txt"
+

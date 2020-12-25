@@ -1,0 +1,26 @@
+- hosts: docker
+  gather_facts: no
+  tasks:
+  - name: installing yum package
+    package:
+      name: "httpd"
+      state: present
+    register: install
+
+  - name: installing httpd package
+    debug:
+      var: install
+
+  - name: starting service
+    command: "/usr/sbin/httpd"
+    register: srvc
+
+  - name: output of srvc command
+    debug:
+      var: srvc.stderr_lines
+
+  - name: creating html file
+    copy:
+      content: "hii wlcm to the world of automation"
+      dest: "/var/www/html/index.html"
+
