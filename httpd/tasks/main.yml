@@ -1,0 +1,40 @@
+---
+# tasks file for httpd
+
+  - name: installing httpd software
+    package:
+      name: "{{ software_1 }}"
+      state: present
+
+  - name: installing php software
+    package:
+      name: "{{ software_2 }}"
+      state: present
+
+  - name: copying webpage
+    copy:
+      src: "a.php"
+      dest: "{{ destination }}"
+    notify: cpweb
+
+  - name: starting webservice
+    service:
+      name: "{{ software_1 }}"
+      state: started
+
+  - name: allowing httpd service in the firewall
+    firewalld:
+     port: "80/tcp"
+     state: enabled
+     permanent: yes
+     immediate: yes
+
+  - name: allowing 8080 port in the firewall
+    firewalld:
+      port: "8080/tcp"
+      state: enabled
+      permanent: yes
+      immediate: yes
+
+
+

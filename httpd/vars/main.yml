@@ -1,0 +1,7 @@
+---
+# vars file for httpd
+
+software_1 : "httpd"
+destination : "/var/www/html/index.php"
+software_2 : "php"
+
