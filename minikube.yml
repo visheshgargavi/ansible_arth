@@ -1,0 +1,21 @@
+- name: Installing kubectl
+    yum:
+      name: kubectl
+      state: present
+- name: Installing Docker
+    yum:
+     name: docker
+     state: present
+- name: Installing conntrack
+    yum:
+      name: conntrack
+      state: present- name: Downloading minikube
+    get_url:
+      url: https://storage.googleapis.com/minikube/releases/latest/minikube-latest.x86_64.rpm
+      dest: /root/minikube-latest.x86_64.rpm
+- name: Installing minkube
+    yum:
+      name: /root/minikube-latest.x86_64.rpm
+      state: present
+- name: Starting Minikube driver using none
+    command: minkube start --driver=none
