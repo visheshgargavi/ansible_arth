@@ -7,4 +7,6 @@
 - configuring haproxy software on aws
 - configuring docker and dynamically updating the ip and ssh inside the docker container
 - creating multi roles
+- configure minikube
+
 
