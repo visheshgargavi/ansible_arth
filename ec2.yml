@@ -1,0 +1,16 @@
+- hosts: localhost
+  tasks:
+  - name: Launching OS
+    ec2:
+      key_name: key
+      instance_type: t2.medium
+      image: ami-04b1ddd35fd71475a
+      wait: yes
+      count: 1
+      instance_tags:
+        Name: k8s_minikube
+      vpc_subnet_id: subnet-c08fce8c
+      assign_public_ip: yes
+      region: ap-south-1
+      state: present
+      group_id: sg-011aaeeafb6ee8fff
