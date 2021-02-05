@@ -9,6 +9,7 @@
 - creating multi roles
 - configure minikube
 - configure ec2-instance
+- Configuring kubernetes master and slave using role
 
 
 
