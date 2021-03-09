@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: mywp
+  name: mywp
+spec:
+  containers:
+  - image: wordpress:5.1.1-php7.3-apache
+    name: mywp
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}

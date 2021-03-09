@@ -1,0 +1,46 @@
+- hosts: aws
+  become_method: sudo
+  become_user: root
+  become: true
+  tasks:
+  - name: copying mysql yaml file
+    copy:
+      src: "mysql.yaml"
+      dest: "/root/mysql.yaml"
+
+  - name: copying wordpress yaml file
+    copy: 
+      src: "wordpress.yaml"
+      dest: "/root/wordpress.yaml"
+
+  - name: copying service file
+    copy:
+      src: "service.yaml"
+      dest: "/root/service.yaml"
+
+
+  - name: creating mysql pod
+    shell: "kubectl apply -f /root/mysql.yaml"
+    register: mysql
+
+  - name: output of mysql pod
+    debug:
+      var: mysql
+
+  - name: creating wordpress pod
+    shell: "kubectl apply -f /root/wordpress.yaml"
+    register: wp
+
+  - name: output of wordpress pod
+    debug:
+      var: wp
+
+  - name: allowing service
+    shell: "kubectl apply -f /root/service.yaml"
+    register: svc
+
+  - name: output of service expose
+    debug:
+      var: svc
+
+
